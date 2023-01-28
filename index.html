@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="it">
+	<head>
+		<title>Portale Richieste Assemblee - I.I.S.S. E. Fermi</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="/style.css">
+	</head>
+	<body>
+		<nav>
+			<h1>Portale Richiesta Assemblee</h1>
+			<a target="_blank" href="//fermilecce.edu.it"><img alt="logo" class="logo small" width=100 src="logo-small.png"><img alt="logo" class="logo large" width=200 src="logo.png"></a>
+		</nav>
+		<main>
+			<form id="form">
+				<fieldset>
+					<legend>Quando</legend>
+					<div>
+						<label for="day">Giorno:</label>
+						<input required type="date" min="today" name="day">
+						<br>
+						<a href="#" id="different-day">» Le due ore non si svolgono nello stesso giorno?</a>
+					</div>
+					<div id="second-day">
+						<label for="day">Secondo giorno:</label>
+						<input type="date" min="today" name="second-day">
+						<br>
+						<a href="#" id="same-day">» No, le ore si svolgeranno nello stesso giorno</a>
+					</div>
+					<div>
+						<label for="first-hour">Prima ora:</label>
+						<input required type="number" step=1 min="8" max="13" value="8" class="hour-selector" name="first-hour" >
+						<label>:00</label>
+					</div>
+					<div>
+						<label for="second-hour">Seconda ora:</label>
+						<input required type="number" step=1 min="8" max="13" value="9" class="hour-selector" name="second-hour" >
+						<label>:00</label>
+					</div>
+				</fieldset>
+				<fieldset id="teachers-field">
+					<legend>Professori</legend>
+					<input type="text" list="teachers" placeholder="Ricerca..." id="teacher-search"/>
+					<datalist id="teachers"></datalist>
+				</fieldset>
+				<fieldset id="topic-field">
+					<legend>Ordini del giorno</legend>
+					<template id="topic-template"><span class="topic"><span onclick="removeThisTopic(this)" class="topic-icon">×</span><input type="text" name="topic"/></span></template>
+					<div id="topics">
+						<span class="topic"><span onclick="removeThisTopic(this)" class="topic-icon">×</span><input type="text" name="topic"/></span>
+					</div>
+					<button id="add-topic">+</button>
+				<br>
+				<br>
+				</fieldset>
+				<input type="submit" value="Richiedi assemblea"/>
+			</form>
+		</main>
+		<footer>
+			<label>fatto da <a target="_blank" href="//heiz.cc">Emanuele Lillo</a>
+				per <a target="_blank" href="//fermilecce.edu.it">IISS Enrico Fermi</a></label>
+		</footer>
+		<script src="/main.js"></script>
+	</body>
+</html>
+
