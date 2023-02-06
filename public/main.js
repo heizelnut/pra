@@ -81,11 +81,19 @@ addEventListener("DOMContentLoaded", _ => {
 	})
 	
 	// form validation
-	$id("form").addEventListener("submit", e => {
+	$id("submit").addEventListener("click", e => {
 		e.preventDefault()
-		debugger
-		let firstDay = $input("day").value
-		let secondDay = $input("second-day").value
+		// let firstDay = $input("day").value
+		// let secondDay = $input("second-day").value
+		fetch('/', {
+			method: "POST",
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				buonase: "stocazzo"
+			})
+		})
 	})
 })
 

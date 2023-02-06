@@ -91,7 +91,7 @@ span.chip label {
 	padding-left: 0.5rem;
 }
 
-input[type=submit] {
+#submit {
 	text-transform: uppercase;
 	border: none;
 	border-radius: 1rem;
@@ -108,7 +108,7 @@ input[type=submit] {
 	transition: transform 200ms ease-in;
 }
 
-input[type=submit]:hover {
+#submit:hover {
 	transform: translateY(-0.1rem);
 }
 
