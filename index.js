@@ -54,11 +54,11 @@ app.get('/callback',
     passport.authenticate('google', { failureRedirect: '/error' }),
     function(req, res) {
         console.log(req.session.passport.user._json)
-        res.redirect('/prova');
+        res.redirect('/dashboard');
     }
 )
 
-// app.use(express.static('public'))
+app.use('/dashboard', express.static('public'))
 // app.listen(port, () => {
 //   console.log(`\x1b[32m[Express] Server listening on port ${port}\x1b[0m`)
 // })
