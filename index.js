@@ -54,7 +54,7 @@ app.get('/callback',
     passport.authenticate('google', { failureRedirect: '/error' }),
     function(req, res) {
         console.log(req.session.passport.user._json)
-        res.redirect('/stocazzo');
+        res.redirect('/prova');
     }
 )
 
