@@ -2,7 +2,7 @@ addEventListener("DOMContentLoaded", _ => {
 	const $id = document.getElementById.bind(document);
 	const $name = document.getElementsByName.bind(document);
 	const $input = elm => { return document.getElementsByName(elm)[0] };
-	fetch("/teachers.csv")
+	fetch("teachers.csv")
 	.then(body => body.text())
 	.then(text => {
 		let csv = []
