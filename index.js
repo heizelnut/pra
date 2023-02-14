@@ -50,7 +50,7 @@ passport.use(new GoogleStrategy({
 
 app.get('/auth', passport.authenticate('google', { scope : ['email', 'profile', 'https://www.googleapis.com/auth/user.organization.read'] }))
 app.use(express.json())
-app.get('/callback', 
+app.get('/callback',
     passport.authenticate('google', { failureRedirect: '/error' }),
     function(req, res) {
         console.log(req.session.passport.user._json)
@@ -58,7 +58,7 @@ app.get('/callback',
     }
 )
 
-app.use('/dashboard', express.static('public'))
+app.use('/dashboard', passport.authenticate('google', { scope : ['email', 'profile', 'https://www.googleapis.com/auth/user.organization.read'] }), express.static('public'))
 // app.listen(port, () => {
 //   console.log(`\x1b[32m[Express] Server listening on port ${port}\x1b[0m`)
 // })
