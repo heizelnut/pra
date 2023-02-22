@@ -42,8 +42,9 @@ passport.use(new GoogleStrategy({
         clientSecret: CLIENT_SECRET,
         callbackURL: "http://localhost:3000/callback"
     },
-  function(accessToken, refreshToken, profile, done) {
+    function(accessToken, refreshToken, profile, done) {
       userProfile=profile;
+      console.log("AAAAA")
       return done(null, userProfile);
     }
 ))
@@ -53,7 +54,8 @@ app.use(express.json())
 app.get('/callback',
     passport.authenticate('google', { failureRedirect: '/error' }),
     function(req, res) {
-        console.log(req.session.passport.user._json)
+        console.log(req.user)
+        // console.log(req.session.passport.user._json)
         res.redirect('/dashboard');
     }
 )

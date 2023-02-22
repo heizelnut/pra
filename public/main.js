@@ -91,7 +91,7 @@ addEventListener("DOMContentLoaded", _ => {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-				buonase: "stocazzo"
+				buonase: "cazzo"
 			})
 		})
 	})
