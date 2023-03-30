@@ -1,27 +1,29 @@
-const mysql_module = require("mysql2")
-const express = require("express")
+require("dotenv")
+const port = process.env.PORT
+const express = require('express')
+const app = express()
+const mysql_module = require('mysql2')
 const session = require('express-session');
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const passport = require('passport');
-
-const app = express()
-const port = process.env.PORT || 3000
 
 const CLIENT_ID = '285067580089-5ouscqf9s5aibk671jfeidfbc324tate.apps.googleusercontent.com'
 const CLIENT_SECRET = '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'
 
 let userProfile, user
 
+const oneDay = 1000 * 60 * 60 * 24
 app.use(session({
-    resave: false,
+    secret: process.env.SESSION_SECRET,
     saveUninitialized: true,
-    secret: 'SECRET' 
+    cookie: { maxAge: oneDay },
+    resave: false 
 }));
 
 app.get('/', function(req, res) {
     res.redirect('/auth')
 });
-app.listen(port , () => console.log('\x1b[32m[Express] Server listening on port ' + port + "\x1b[0m"));
+app.listen(port, () => console.log('\x1b[32m[Express] Server listening on port ' + port + "\x1b[0m"));
 
 app.use(passport.initialize())
 app.use(passport.session())
@@ -60,7 +62,7 @@ app.get('/callback',
     }
 )
 
-app.use('/dashboard', express.static('public'))
+app.get('/dashboard', express.static('public'))
 
 // app.use(express.json())
 app.post('/', (req, res) => {
@@ -68,18 +70,18 @@ app.post('/', (req, res) => {
 })
 app.get('/', (req, res) => {})
 
-const mysql = mysql_module.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'fermi',
-    database: 'pra_test'
-})
-mysql.connect((err) => {
-    if(err) {
-        console.log("\x1b[31m[MySQL2] Unable to establish database connection!" + "\x1b[0m")
-        console.log("\x1b[31m[MySQL2] Error code: " + err.code + "\x1b[0m")
-        console.log("\x1b[31m[MySQL2] " + err.sqlMessage + "\x1b[0m")
-        return
-    }
-    console.log("\x1b[32m[MySQL2] Database server connection established\x1b[0m")
-})
+// const mysql = mysql_module.createConnection({
+//     host: 'riccardoconte.lol',
+//     user: 'root',
+//     password: 'roger7904',
+//     database: 'pra_test'
+// })
+// mysql.connect((err) => {
+//     if(err) {
+//         console.log("\x1b[31m[MySQL2] Unable to establish database connection!" + "\x1b[0m")
+//         console.log("\x1b[31m[MySQL2] Error code: " + err.code + "\x1b[0m")
+//         console.log("\x1b[31m[MySQL2] " + err.sqlMessage + "\x1b[0m")
+//         return
+//     }
+//     console.log("\x1b[32m[MySQL2] Database server connection established\x1b[0m")
+// })
