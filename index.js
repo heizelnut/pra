@@ -17,7 +17,7 @@ app.use(session({
     saveUninitialized: true,
     cookie: { maxAge: 86400000 },
     resave: false 
-}));
+}))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(express.json())
@@ -26,40 +26,47 @@ app.use('/dashboard', express.static('public'))
 
 
 // OAuth
+passport.serializeUser(function(user, done) {
+    done(null, user)
+})
+passport.deserializeUser(function(user, done) {
+    done(null, user)
+})
+
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
     callbackURL: "http://localhost/redirect"
-    }, function(accessToken, refreshToken, profile, done) {
-        userProfile=profile;
-        return done(null, userProfile);
+    }, function(issuer, profile, cb) {
+        userProfile=profile
+        return done(null, userProfile)
     }
 ))
 
 
 
 //GET Paths
-app.get('/', passport.authenticate('google', { scope : ['email', 'profile', 'https://www.googleapis.com/auth/user.organization.read'] }));
+app.get('/', passport.authenticate('google', { scope : ['email', 'profile', 'https://www.googleapis.com/auth/user.organization.read'] }))
 app.get('/redirect',
     passport.authenticate('google', { failureRedirect: '/error' }),
     function(req, res) {
         console.log(req.user)
-        res.redirect('/dashboard');
+        res.redirect('/dashboard')
     }
 )
 
 
 
 //Server listen
-app.listen(process.env.PORT, () => console.log('\x1b[32m[Express] Server listening on port ' + process.env.PORT + "\x1b[0m"));
+app.listen(process.env.PORT, () => console.log('\x1b[32m[Express] Server listening on port ' + process.env.PORT + "\x1b[0m"))
 
 
 
 //DB Connection
-// const db = mysql_module.createConnection({
-//     host: 'riccardoconte.lol',
+// const db = mysql.createConnection({
+//     host: 'localhost',
 //     user: 'root',
-//     password: 'roger7904',
+//     password: 'pra_test',
 //     database: 'pra_test'
 // })
 // db.connect((err) => {
