@@ -3,8 +3,10 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const mysql = require('mysql2')
+const nodemailer = require('nodemailer')
 const session = require('express-session')
 const passport = require('passport')
+const path = require('path')
 const GoogleStrategy = require('passport-google-oidc')
 
 let userProfile
@@ -21,7 +23,6 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(express.json())
-app.use('/dashboard', express.static('public'))
 
 
 
@@ -39,7 +40,7 @@ passport.use(new GoogleStrategy({
     callbackURL: "http://localhost/redirect"
     }, function(issuer, profile, cb) {
         userProfile=profile
-        return done(null, userProfile)
+        return cb(null, userProfile)
     }
 ))
 
@@ -54,6 +55,12 @@ app.get('/redirect',
         res.redirect('/dashboard')
     }
 )
+app.get('/send', (req, res) => {
+    console.log(req)
+})
+app.get('/dashboard', (req, res) => {
+    res.sendFile(path.join(__dirname, '/public/index.html'))
+})
 
 
 
