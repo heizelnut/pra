@@ -1,82 +1,68 @@
-require("dotenv")
-const port = process.env.PORT
+require('dotenv').config()
+
 const express = require('express')
 const app = express()
-const mysql_module = require('mysql2')
-const session = require('express-session');
-const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-const passport = require('passport');
+const mysql = require('mysql2')
+const session = require('express-session')
+const passport = require('passport')
+const GoogleStrategy = require('passport-google-oidc')
 
-const CLIENT_ID = '285067580089-5ouscqf9s5aibk671jfeidfbc324tate.apps.googleusercontent.com'
-const CLIENT_SECRET = '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'
+let userProfile
 
-let userProfile, user
 
-const oneDay = 1000 * 60 * 60 * 24
+
+// Middlewares
 app.use(session({
     secret: process.env.SESSION_SECRET,
     saveUninitialized: true,
-    cookie: { maxAge: oneDay },
+    cookie: { maxAge: 86400000 },
     resave: false 
 }));
-
-app.get('/', function(req, res) {
-    res.redirect('/auth')
-});
-app.listen(port, () => console.log('\x1b[32m[Express] Server listening on port ' + port + "\x1b[0m"));
-
 app.use(passport.initialize())
 app.use(passport.session())
+app.use(express.json())
+app.use('/dashboard', express.static('public'))
 
-app.get('/success', (req, res) => res.send(userProfile))
-app.get('/error', (req, res) => res.send("error logging in"))
 
-passport.serializeUser(function(user, cb) {
-    cb(null, user)
-})
 
-passport.deserializeUser(function(obj, cb) {
-    cb(null, obj)
-})
-
+// OAuth
 passport.use(new GoogleStrategy({
-        clientID: CLIENT_ID,
-        clientSecret: CLIENT_SECRET,
-        callbackURL: "http://localhost:3000/callback"
-    },
-    function(accessToken, refreshToken, profile, done) {
-      userProfile=profile;
-      console.log("AAAAA")
-      return done(null, userProfile);
+    clientID: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    callbackURL: "http://localhost/redirect"
+    }, function(accessToken, refreshToken, profile, done) {
+        userProfile=profile;
+        return done(null, userProfile);
     }
 ))
 
-app.get('/auth', passport.authenticate('google', { scope : ['email', 'profile', 'https://www.googleapis.com/auth/user.organization.read'] }))
-app.use(express.json())
-app.get('/callback',
+
+
+//GET Paths
+app.get('/', passport.authenticate('google', { scope : ['email', 'profile', 'https://www.googleapis.com/auth/user.organization.read'] }));
+app.get('/redirect',
     passport.authenticate('google', { failureRedirect: '/error' }),
     function(req, res) {
         console.log(req.user)
-        // console.log(req.session.passport.user._json)
         res.redirect('/dashboard');
     }
 )
 
-app.get('/dashboard', express.static('public'))
 
-// app.use(express.json())
-app.post('/', (req, res) => {
-    console.log(req.body)
-})
-app.get('/', (req, res) => {})
 
-// const mysql = mysql_module.createConnection({
+//Server listen
+app.listen(process.env.PORT, () => console.log('\x1b[32m[Express] Server listening on port ' + process.env.PORT + "\x1b[0m"));
+
+
+
+//DB Connection
+// const db = mysql_module.createConnection({
 //     host: 'riccardoconte.lol',
 //     user: 'root',
 //     password: 'roger7904',
 //     database: 'pra_test'
 // })
-// mysql.connect((err) => {
+// db.connect((err) => {
 //     if(err) {
 //         console.log("\x1b[31m[MySQL2] Unable to establish database connection!" + "\x1b[0m")
 //         console.log("\x1b[31m[MySQL2] Error code: " + err.code + "\x1b[0m")
