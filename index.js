@@ -52,15 +52,13 @@ app.get('/', passport.authenticate('google', { scope : ['email', 'profile', 'htt
 app.get('/redirect',
     passport.authenticate('google', { failureRedirect: '/error' }),
     function(req, res) {
-        console.log(req)
+        // console.log(req)
         res.redirect('/dashboard')
     }
 )
-app.get('/send', (req, res) => {
-    console.log(req)
-})
 app.get('/me', (req, res) => {
 	res.setHeader("Content-Type", "application/json")
+    console.log(req.user)
 	res.send(req.user);
 })
 

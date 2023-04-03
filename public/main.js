@@ -1,8 +1,9 @@
 addEventListener("DOMContentLoaded", _ => {
-	const urlParams = new URLSearchParams(window.location.search);
-	const username = urlParams.get('name');
-	console.log(username)
-	document.getElementById('account-name').textContent = username;
+	fetch('/me')
+	.then(response => response.json())
+	.then(user => {
+		document.getElementById('account-name').textContent = user.name.givenName;
+	})
 	const $id = document.getElementById.bind(document);
 	const $name = document.getElementsByName.bind(document);
 	const $input = elm => { return document.getElementsByName(elm)[0] };
@@ -95,7 +96,7 @@ addEventListener("DOMContentLoaded", _ => {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-				buonase: "cazzo"
+				
 			})
 		})
 	})
