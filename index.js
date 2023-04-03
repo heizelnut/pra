@@ -59,6 +59,10 @@ app.get('/redirect',
 app.get('/send', (req, res) => {
     console.log(req)
 })
+app.get('/me', (req, res) => {
+	res.setHeader("Content-Type", "application/json")
+	res.send(req.user);
+})
 
 
 //Server listen
