@@ -1,4 +1,8 @@
 addEventListener("DOMContentLoaded", _ => {
+	const urlParams = new URLSearchParams(window.location.search);
+	const username = urlParams.get('name');
+	console.log(username)
+	document.getElementById('account-name').textContent = username;
 	const $id = document.getElementById.bind(document);
 	const $name = document.getElementsByName.bind(document);
 	const $input = elm => { return document.getElementsByName(elm)[0] };

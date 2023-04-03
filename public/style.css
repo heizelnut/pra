@@ -38,17 +38,19 @@ footer { padding: 3rem 1rem 1rem 1rem; text-align: center;}
 
 nav * { margin: 0; }
 
-#login-state {
+#welcome-text {
 	position: relative;
-	left: 50%;
-	transform: translateX(-50%);
-	display: flex;
-	flex-direction: row;
+	text-align: center;
+	left: 50%; transform: translateX(-50%);
+	width: max-content;
+	place-content: center;
 	place-items: center;
-	justify-content: center;
+	float: center;
 }
-
-#email-utente {
+#welcome-text a,span,p {
+	margin-bottom: 0;
+}
+#nome-utente {
 	font-weight: bold;
 }
 
@@ -195,6 +197,16 @@ nav a {
 }
 
 @media screen and (max-width: 870px) {
+	#welcome-text {
+		position: relative;
+		text-align: center;
+		display: grid;
+		grid-template-rows: 1fr 1fr;
+		width: max-content;
+		place-content: center;
+		place-items: center;
+	}
+
 	fieldset {
 		padding: 1rem;
 		margin: 0rem;

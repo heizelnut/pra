@@ -6,8 +6,8 @@ const mysql = require('mysql2')
 const nodemailer = require('nodemailer')
 const session = require('express-session')
 const passport = require('passport')
-const path = require('path')
 const GoogleStrategy = require('passport-google-oidc')
+const path = require('path')
 
 let userProfile
 
@@ -20,6 +20,7 @@ app.use(session({
     cookie: { maxAge: 86400000 },
     resave: false 
 }))
+app.use('/dashboard', express.static('public'))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(express.json())
@@ -51,17 +52,13 @@ app.get('/', passport.authenticate('google', { scope : ['email', 'profile', 'htt
 app.get('/redirect',
     passport.authenticate('google', { failureRedirect: '/error' }),
     function(req, res) {
-        console.log(req.user)
+        console.log(req)
         res.redirect('/dashboard')
     }
 )
 app.get('/send', (req, res) => {
     console.log(req)
 })
-app.get('/dashboard', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public/index.html'))
-})
-
 
 
 //Server listen
