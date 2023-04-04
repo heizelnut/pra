@@ -9,9 +9,6 @@ const passport = require('passport')
 const GoogleStrategy = require('passport-google-oidc')
 const path = require('path')
 
-let userProfile
-
-
 
 // Middlewares
 app.use(session({
@@ -20,11 +17,15 @@ app.use(session({
     cookie: { maxAge: 86400000 },
     resave: false 
 }))
-app.use('/dashboard', express.static('public'))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(express.json())
-
+app.use(function(req, res, next) {
+    if (!req.isAuthenticated() && req.path.indexOf('/dashboard') === 0)
+		res.redirect('/')
+    next()
+})
+app.use('/dashboard', express.static('public'))
 
 
 // OAuth
@@ -39,20 +40,20 @@ passport.use(new GoogleStrategy({
     clientSecret: process.env.CLIENT_SECRET,
     callbackURL: "http://localhost/redirect"
     }, function(issuer, profile, cb) {
-        userProfile=profile
-        return cb(null, userProfile)
+        return cb(null, profile)
     }
 ))
 
 
-
-//GET Paths
+// GET Paths
 app.get('/', passport.authenticate('google', { scope : ['email', 'profile', 'https://www.googleapis.com/auth/user.organization.read'] }))
 app.get('/redirect',
     passport.authenticate('google', { failureRedirect: '/error' }),
     function(req, res) {
-        // console.log(req)
-        res.redirect('/dashboard')
+		if (req.user)
+			res.redirect('/dashboard')
+		else
+			res.redirect('/')
     }
 )
 app.get('/me', (req, res) => {
@@ -60,8 +61,14 @@ app.get('/me', (req, res) => {
     console.log(req.user)
 	res.send(req.user);
 })
+app.get('/logout', (req, res) => {
+	req.logout(function(err) {
+		if (err)
+			return next(err)
+		res.redirect('/')
+	})
+})
 
 
-
-//Server listen
+// Server listen
 app.listen(process.env.PORT, () => console.log('\x1b[32m[Express] Server listening on port ' + process.env.PORT + "\x1b[0m"))
