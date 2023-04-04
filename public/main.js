@@ -90,13 +90,13 @@ addEventListener("DOMContentLoaded", _ => {
 		e.preventDefault()
 		// let firstDay = $input("day").value
 		// let secondDay = $input("second-day").value
-		fetch('/', {
+		fetch('/send', {
 			method: "POST",
 			headers: {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-				
+				firstDay: $input("day").value
 			})
 		})
 	})

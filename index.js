@@ -46,7 +46,7 @@ passport.use(new GoogleStrategy({
 
 
 // GET Paths
-app.get('/', passport.authenticate('google', { scope : ['email', 'profile', 'https://www.googleapis.com/auth/user.organization.read'] }))
+app.get('/', passport.authenticate('google', { scope : ['email', 'profile', 'https://www.googleapis.com/auth/user.organization.read', 'https://www.googleapis.com/auth/gmail.send'] }))
 app.get('/redirect',
     passport.authenticate('google', { failureRedirect: '/error' }),
     function(req, res) {
@@ -66,6 +66,9 @@ app.get('/logout', (req, res, next) => {
 			return next(err)
 		res.redirect('/')
 	})
+})
+app.get('/send', (res, req) => {
+    // let transporter = nodemailer.createTransport
 })
 
 
