@@ -57,11 +57,10 @@ app.get('/redirect',
     }
 )
 app.get('/me', (req, res) => {
-	res.setHeader("Content-Type", "application/json")
-    console.log(req.user)
+    console.log("Utente autenticato: " + req.user.displayName)
 	res.send(req.user);
 })
-app.get('/logout', (req, res) => {
+app.get('/logout', (req, res, next) => {
 	req.logout(function(err) {
 		if (err)
 			return next(err)
