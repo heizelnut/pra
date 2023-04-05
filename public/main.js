@@ -1,12 +1,19 @@
 addEventListener("DOMContentLoaded", _ => {
+	const $id = document.getElementById.bind(document);
+	const $name = document.getElementsByName.bind(document);
+	const $input = elm => { return document.getElementsByName(elm)[0] };
+
+	let teachers = []
+	let topics = []
+
+	$id("day").valueAsDate = new Date()
+
 	fetch('/me')
 	.then(response => response.json())
 	.then(user => {
 		document.getElementById('account-name').textContent = user.name.givenName;
 	})
-	const $id = document.getElementById.bind(document);
-	const $name = document.getElementsByName.bind(document);
-	const $input = elm => { return document.getElementsByName(elm)[0] };
+
 	fetch("teachers.csv")
 	.then(body => body.text())
 	.then(text => {
@@ -58,10 +65,17 @@ addEventListener("DOMContentLoaded", _ => {
 		deleteme.textContent = '×'
 		deleteme.addEventListener("click", e => {
 			chip.classList.add("removed")
+			for(const teacher of teachers) {
+				if(teacher.id == JSON.parse(chip.getAttribute("json")).id) {
+					teachers.splice(teachers.indexOf(teacher), 1)
+					break
+				}
+			}
 			setTimeout(_ => $id("teachers-field").removeChild(chip), 200)
 		})
 		chip.appendChild(deleteme)
 		$id("teachers-field").appendChild(chip)
+		teachers.push(JSON.parse(chip.getAttribute("json")))
 		$id("teacher-search").value = ""
 	})
 
@@ -88,17 +102,24 @@ addEventListener("DOMContentLoaded", _ => {
 	// form validation
 	$id("submit").addEventListener("click", e => {
 		e.preventDefault()
-		// let firstDay = $input("day").value
-		// let secondDay = $input("second-day").value
+		for(const topic of $id("topics").children) {
+			topics.push(topic.childNodes[1].value)
+		}
 		fetch('/send', {
 			method: "POST",
 			headers: {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-				firstDay: $input("day").value
+				firstDay: $input("day").value,
+				secondDay: $input("second-day").value,
+				firstHour: $input("first-hour").value,
+				secondHour: $input("second-hour").value,
+				teachers: teachers,
+				topics: topics
 			})
 		})
+		location.reload()
 	})
 })
 

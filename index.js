@@ -67,10 +67,14 @@ app.get('/logout', (req, res, next) => {
 		res.redirect('/')
 	})
 })
-app.get('/send', (res, req) => {
+
+
+//POST Paths
+app.post('/send', (req, res) => {
+    console.log(req.body)
     // let transporter = nodemailer.createTransport
 })
 
 
 // Server listen
-app.listen(process.env.PORT, () => console.log('\x1b[32m[Express] Server listening on port ' + process.env.PORT + "\x1b[0m"))
+app.listen(process.env.PORT, _ => console.log('\x1b[32m[Express] Server in ascolto sulla porta ' + process.env.PORT + "\x1b[0m"))
