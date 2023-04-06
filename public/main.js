@@ -1,7 +1,7 @@
 addEventListener("DOMContentLoaded", _ => {
-	const $id = document.getElementById.bind(document);
-	const $name = document.getElementsByName.bind(document);
-	const $input = elm => { return document.getElementsByName(elm)[0] };
+	const $id = document.getElementById.bind(document)
+	const $name = document.getElementsByName.bind(document)
+	const $input = elm => { return document.getElementsByName(elm)[0] }
 
 	let teachers = []
 	let topics = []
@@ -11,7 +11,7 @@ addEventListener("DOMContentLoaded", _ => {
 	fetch('/me')
 	.then(response => response.json())
 	.then(user => {
-		document.getElementById('account-name').textContent = user.name.givenName;
+		document.getElementById('account-name').textContent = user.name.givenName
 	})
 
 	fetch("teachers.csv")
@@ -26,7 +26,7 @@ addEventListener("DOMContentLoaded", _ => {
 			let selected = 0
 			let entry = {}
 			let values = line.split(",")
-			entry.id = id++;
+			entry.id = id++
 			for (let field of fields)
 				entry[field] = values[selected++]
 			csv.push(entry)
@@ -115,7 +115,7 @@ addEventListener("DOMContentLoaded", _ => {
 				secondDay: $input("second-day").value,
 				firstHour: $input("first-hour").value,
 				secondHour: $input("second-hour").value,
-				teachers: teachers,
+				teachers: teachers.map(teacher => teacher.id),
 				topics: topics
 			})
 		})
