@@ -13,7 +13,7 @@
 		</nav>
 		
 		<section id="welcome-text">
-			<p>Benvenuto, <b><span id="account-name">{nome}</span></b></p>
+			<p>Benvenuto, <strong><span id="account-name">{nome}</span></strong></p>
 			<a href="/logout">Esci</a>
 		</section>
 
@@ -27,7 +27,7 @@
 						<br>
 						<a href="#" id="different-day">» Le due ore non si svolgono nello stesso giorno?</a>
 					</div>
-					<div id="second-day">
+					<div id="second-day" style="display: none">
 						<label for="day">Secondo giorno:</label>
 						<input type="date" min="today" name="second-day" id="second-day">
 						<br>
@@ -59,7 +59,7 @@
 				<br>
 				<br>
 				</fieldset>
-				<button id="submit">Richiedi assemblea</button>
+				<button id="submit" disabled>Richiedi assemblea</button>
 			</div>
 		</main>
 		<footer>
