@@ -4,7 +4,7 @@
 	const $input = elm => { return document.getElementsByName(elm)[0] }
 
 	document.addEventListener("DOMContentLoaded", _ => {
-		let teachers = []
+		let selectedTeachers = []
 		let topics = []
 
 		$id("day").valueAsDate = new Date()
@@ -22,7 +22,7 @@
 			let lines = text.split("\n")
 			let fields = lines[0].split(",")
 			lines = lines.filter(line => line != "")
-			let id = 1;
+			let id = 1
 			for (let line of lines.splice(1)) {
 				let selected = 0
 				let entry = {}
@@ -38,37 +38,43 @@
 			for (let teacher of csv) {
 				let optionElement = document.createElement("option")
 				optionElement.value = teacher.name
-				optionElement.setAttribute("json", JSON.stringify(teacher))
+				optionElement.setAttribute("email", teacher.email)
+				optionElement.setAttribute("code", teacher.id)
 				$id("teachers").appendChild(optionElement)
 			}
 		})
 		.catch(err => {
-			console.error(err);
+			console.error(err)
 			alert("Cannot fetch teachers file, retry...")
 		})
 
 		let getCompleteOption = (opt) => {
 			for (let child of $id("teachers").children) {
 				if (child.getAttribute("value") == opt)
-					return child;
+					return child
 			}
-			return null;
+			return null
 		}
 
 		$id("teacher-search").addEventListener("change", e => {
 			e.preventDefault()
 			let chip = document.createElement("span")
 			if (getCompleteOption($id("teacher-search").value) == null) return
+			if (selectedTeachers.indexOf(parseInt(getCompleteOption($id("teacher-search").value).getAttribute("code"))) != -1) {
+				$id("teacher-search").value = ""
+				return
+			}
 			chip.classList.add("chip")
-			chip.setAttribute("json", getCompleteOption($id("teacher-search").value).getAttribute("json"))
+			chip.setAttribute("title", getCompleteOption($id("teacher-search").value).getAttribute("email"))
+			chip.setAttribute("code", getCompleteOption($id("teacher-search").value).getAttribute("code"))
 			chip.textContent += $id("teacher-search").value
 			deleteme = document.createElement("label")
 			deleteme.textContent = '×'
 			deleteme.addEventListener("click", e => {
 				chip.classList.add("removed")
-				for(const teacher of teachers) {
-					if(teacher.id == JSON.parse(chip.getAttribute("json")).id) {
-						teachers.splice(teachers.indexOf(teacher), 1)
+				for(const teacher of selectedTeachers) {
+					if(teacher == chip.getAttribute("code")) {
+						selectedTeachers.splice(selectedTeachers.indexOf(teacher), 1)
 						break
 					}
 				}
@@ -76,7 +82,7 @@
 			})
 			chip.appendChild(deleteme)
 			$id("teachers-field").appendChild(chip)
-			teachers.push(JSON.parse(chip.getAttribute("json")))
+			selectedTeachers.push(JSON.parse(chip.getAttribute("code")))
 			$id("teacher-search").value = ""
 		})
 
@@ -101,7 +107,7 @@
 		})
 		
 		$id("submit").addEventListener("click", e => {
-			if (e.target.hasAttribute["disabled"]) return;
+			if (e.target.hasAttribute["disabled"]) return
 			e.preventDefault()
 			for(const topic of $id("topics").children) {
 				topics.push(topic.childNodes[1].value)
@@ -114,13 +120,20 @@
 				body: JSON.stringify({
 					firstDay: $input("day").value,
 					secondDay: $input("second-day").value,
-					firstHour: $input("first-hour").value,
-					secondHour: $input("second-hour").value,
-					teachers: teachers.map(teacher => teacher.id),
+					firstHour: parseInt($input("first-hour").value),
+					secondHour: parseInt($input("second-hour").value),
+					teachers: selectedTeachers.map(id => parseInt(id)),
 					topics: topics
 				})
 			})
-			// location.reload()
+			.then(res => {
+				if (res.status == 200)
+					location.href = "/success"
+			}).then(body => body.json())
+			.then(json => {
+				$id("errorMessage").textContent = json.description
+				$id("errorMessage").style.display = 'block'
+			})
 		})
 	})
 
@@ -130,6 +143,7 @@
 		// rules:
 		//   the meeting should be booked at least 5 days prior
 		//   cannot have same hour if same day is selected
+		//   cannot have same day if second day is selected
 		//   at least 3 topics of discussion, at most 6
 		//   at least 1 teacher selected, at most 3
 		
@@ -140,8 +154,8 @@
 		const MAX_TEACHERS = 3
 
 		let differentDays = ($id("second-day").style.display != 'none')
-		let deadline = new Date();
-		deadline.setDate(deadline.getDate() + DEADLINE_PERIOD_IN_DAYS);
+		let deadline = new Date()
+		deadline.setDate(deadline.getDate() + DEADLINE_PERIOD_IN_DAYS)
 
 		// deadline check
 		let firstDate = new Date($input("day").value)
@@ -159,7 +173,7 @@
 			} else { $input("second-day").classList.remove("incomplete") }
 		}
 
-		// same-day hour check
+		// same-day same-hour check
 		if (!differentDays) {
 			if ($input("first-hour").value === $input("second-hour").value) {
 				$input("first-hour").classList.add("incomplete")
@@ -190,13 +204,14 @@
 		}
 
 		if (canSend)
-			$id("submit").removeAttribute("disabled");
+			$id("submit").removeAttribute("disabled")
 		else
-			$id("submit").setAttribute("disabled", null);
+			$id("submit").setAttribute("disabled", null)
+
 	}
 
 	setInterval(validateForm, 1000)
-})();
+})()
 
 let removeThisTopic = elm => {
 	let topic = elm.parentElement

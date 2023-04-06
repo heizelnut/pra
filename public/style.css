@@ -5,7 +5,9 @@
 	--light: #ffffff;
 	--gray: #e4e4e4;
 	--dark: #212121;
-	--incomplete: #ffa500;
+	--incomplete: #fe5a1d;
+	--error: #d32a21;
+	--error-background: #ea8f8a;
 }
 
 html {
@@ -165,6 +167,7 @@ span.chip label {
 input#teacher-search {
 	display: block;
 	width: 100%;
+	margin-top: 0.2rem;
 }
 
 a {
@@ -199,6 +202,16 @@ nav {
 nav a {
 	padding: 0;
 	margin: 0;
+}
+
+#errorMessage {
+	display: none;
+	background-color: var(--error-background);
+	border: 2px solid var(--error);
+	border-radius: 0.5rem;
+	color: #772121;
+	padding: 1rem;
+	margin: 1rem;
 }
 
 @media screen and (max-width: 870px) {
