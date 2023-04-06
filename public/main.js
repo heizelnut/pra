@@ -15,7 +15,7 @@
 			document.getElementById('account-name').textContent = user.name.givenName
 		})
 
-		fetch("teachers.csv")
+		fetch("/teachers.csv")
 		.then(body => body.text())
 		.then(text => {
 			let csv = []
@@ -127,12 +127,20 @@
 				})
 			})
 			.then(res => {
-				if (res.status == 200)
+				if (res.ok)
 					location.href = "/success"
-			}).then(body => body.json())
-			.then(json => {
-				$id("errorMessage").textContent = json.description
+				else
+					return res.json()
+			}).then(json => {
+				console.error(json)
+				if (json.description) {
+					$id("errorMessage").innerHTML = json.description
+					$id("errorMessage").style.display = 'block'
+				}
+			})
+			.catch(err => {
 				$id("errorMessage").style.display = 'block'
+				$id("errorMessage").textContent = err
 			})
 		})
 	})

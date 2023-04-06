@@ -205,7 +205,6 @@ nav a {
 }
 
 #errorMessage {
-	display: none;
 	background-color: var(--error-background);
 	border: 2px solid var(--error);
 	border-radius: 0.5rem;
